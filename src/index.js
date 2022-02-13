@@ -4,9 +4,13 @@ import App from './App';
 import { Database } from 'firebase/database';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createContext } from 'react';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import reportWebVitals from './reportWebVitals';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
+export const Context = createContext(null);
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDZPnzNQAs-80ZVaunNIhCkwsfzqPHJ4J8',
@@ -18,15 +22,19 @@ const firebaseConfig = {
   messagingSenderId: '386251112229',
   appId: '1:386251112229:web:6402f60051cf448adb24cc',
 };
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const firestore = new Database(app);
-console.log('app: ', app);
-console.log('firestore: ', firestore);
+const firebase = initializeApp(firebaseConfig);
+const db = new Database(firebase);
+const auth = getAuth(firebase);
+const [user, loading, error] = useAuthState(auth);
+
+console.log('firebase: ', firebase);
+console.log('db: ', db);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Context.Provider value={{ auth, user, loading }}>
+      <App />
+    </Context.Provider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

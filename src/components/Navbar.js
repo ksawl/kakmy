@@ -3,29 +3,38 @@ import * as React from 'react';
 import { Button, Grid } from '@mui/material';
 
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
+import { Context } from '../index';
 import { LOGIN_ROUTE } from '../utils/consts';
 import { NavLink } from 'react-router-dom';
 import Toolbar from '@mui/material/Toolbar';
+import { signOut } from '@firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useContext } from 'react';
 
 const Navbar = () => {
-  const user = false;
+  const { auth } = useContext(Context);
+  const [user] = useAuthState(auth);
+
+  const logout = () => {
+    signOut(auth);
+  };
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar color={'primary'} position="static">
-        <Toolbar variant={"dense"}>
-          <Grid container justifyContent="flex-end">
-            {user ? (
-              <Button variant="contained">Logout</Button>
-            ) : (
-              <NavLink to={LOGIN_ROUTE}>
-                <Button variant="contained">Login</Button>
-              </NavLink>
-            )}
-          </Grid>
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <AppBar color={'primary'} position="static">
+      <Toolbar variant={'dense'}>
+        <Grid container justifyContent="flex-end">
+          {user ? (
+            <Button variant="contained" onClick={logout}>
+              Logout
+            </Button>
+          ) : (
+            <NavLink to={LOGIN_ROUTE}>
+              <Button variant="contained">Login</Button>
+            </NavLink>
+          )}
+        </Grid>
+      </Toolbar>
+    </AppBar>
   );
 };
 
