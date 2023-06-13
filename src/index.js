@@ -8,7 +8,6 @@ import { createContext } from 'react';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import reportWebVitals from './reportWebVitals';
-import { useAuthState } from 'react-firebase-hooks/auth';
 
 export const Context = createContext(null);
 
@@ -25,14 +24,13 @@ const firebaseConfig = {
 const firebase = initializeApp(firebaseConfig);
 const db = new Database(firebase);
 const auth = getAuth(firebase);
-const [user, loading, error] = useAuthState(auth);
 
 console.log('firebase: ', firebase);
 console.log('db: ', db);
 
 ReactDOM.render(
   <React.StrictMode>
-    <Context.Provider value={{ auth, user, loading }}>
+    <Context.Provider value={{ auth }}>
       <App />
     </Context.Provider>
   </React.StrictMode>,
